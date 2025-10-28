@@ -121,3 +121,11 @@ make clean
 ```
 
 This will remove all files in the bin/ directory.
+
+## PROOF:
+
+
+[CUDA.pdf](https://github.com/user-attachments/files/23190812/CUDA.pdf)
+<img width="1911" height="1079" alt="Screenshot 2025-10-28 203058" src="https://github.com/user-attachments/assets/ae32408a-d5c2-4a4a-9d45-f86092fa24e0" />
+
+[CUDA 1.pdf](https://github.com/user-attachments/files/23190900/CUDA.1.pdf)
