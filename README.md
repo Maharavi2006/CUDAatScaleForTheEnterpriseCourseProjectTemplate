@@ -124,7 +124,28 @@ This will remove all files in the bin/ directory.
 
 ## PROOF:
 
+ ## TITLE: CUDA at Scale: Image Batch Processor using OpenCV
+## Overview
 
+This project demonstrates large-scale image processing using GPU-style operations.
+It simulates CUDA-based parallelism by processing multiple images (100s of small or 10s of large ones) with pixel-wise operations such as Grayscale conversion and Gaussian blur using the OpenCV library in Python.
+
+Although implemented in Python, the project structure and workflow mimic a CUDA-style processing pipeline — preparing the foundation for extending to real GPU-based CUDA kernels.
+
+## Objective:
+To perform high-speed, parallel-style processing on multiple image datasets to simulate how CUDA-based systems scale image transformations.
+
+## Key Concepts:
+
+Batch Image Processing
+
+GPU Parallelism Simulation
+
+Gaussian Filtering and Grayscale Conversion
+
+OpenCV-based Image Transformation
+
+## Proof of Execution and Automation
 [CUDA.pdf](https://github.com/user-attachments/files/23190812/CUDA.pdf)
 <img width="1911" height="1079" alt="Screenshot 2025-10-28 203058" src="https://github.com/user-attachments/assets/ae32408a-d5c2-4a4a-9d45-f86092fa24e0" />
 
