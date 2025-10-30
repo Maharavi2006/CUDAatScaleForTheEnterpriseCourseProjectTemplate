@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>CUDA NPP Image Rotation Result</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f0f0f0; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .info { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ðŸŽ‰ CUDA NPP Image Rotation Success!</h1>
+        <div class="info">
+            <h2>Results Summary</h2>
+            <p><strong>Original Image:</strong> 512x512 checkerboard pattern</p>
+            <p><strong>Rotation:</strong> 45 degrees</p>
+            <p><strong>Output Size:</strong> 768x768</p>
+            <p><strong>GPU Used:</strong> Pascal (Compute 6.1)</p>
+            <p><strong>File:</strong> test_rotated.pgm ( KB)</p>
+        </div>
+        <div class="info">
+            <h2>How to View the Image</h2>
+            <p><strong>PGM files can be opened with:</strong></p>
+            <ul style="text-align: left;">
+                <li>ðŸ–¼ï¸ <strong>IrfanView</strong> (Free) - <a href="https://www.irfanview.com/">Download here</a></li>
+                <li>ðŸŽ¨ <strong>GIMP</strong> (Free) - <a href="https://www.gimp.org/">Download here</a></li>
+                <li>ðŸ–¥ï¸ <strong>Paint.NET</strong> (Free) - May need plugin</li>
+                <li>ðŸŒ <strong>Online PGM Viewer</strong> - Search "PGM viewer online"</li>
+            </ul>
+        </div>
+        <div class="info">
+            <h2>What You Should See</h2>
+            <p>The rotated image shows a checkerboard pattern rotated 45 degrees, creating a diamond pattern. 
+            The black and white squares from the original are now oriented diagonally.</p>
+        </div>
+        <div class="info">
+            <p class="success">âœ… GPU-accelerated image rotation completed successfully!</p>
+            <p><em>This demonstrates CUDA NPP library working correctly on your system.</em></p>
+        </div>
+    </div>
+</body>
+</html>
