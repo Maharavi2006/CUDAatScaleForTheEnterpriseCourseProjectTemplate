@@ -1,152 +1,354 @@
-# Image Rotation using NVIDIA NPP with CUDA
+# CUDA NPP Image Rotation Project
 
-## Overview
+## Project Description
 
-This project demonstrates the use of NVIDIA Performance Primitives (NPP) library with CUDA to perform image rotation. The goal is to utilize GPU acceleration to efficiently rotate a given image by a specified angle, leveraging the computational power of modern GPUs. The project is a part of the CUDA at Scale for the Enterprise course and serves as a template for understanding how to implement basic image processing operations using CUDA and NPP.
+This project implements GPU-accelerated image rotation using NVIDIA Performance Primitives (NPP) library and CUDA. The program performs geometric transformation of grayscale images, specifically rotating input images by 45 degrees using GPU parallel processing capabilities.
 
-## Code Organization
+## What This Project Does
 
-```bin/```
-This folder should hold all binary/executable code that is built automatically or manually. Executable code should have use the .exe extension or programming language-specific extension.
+1. **Loads a grayscale image** from PGM format or creates a test pattern
+2. **Uploads image data** from CPU memory to GPU memory
+3. **Performs 45-degree rotation** using NPP's optimized GPU kernels
+4. **Downloads the result** back to CPU memory
+5. **Saves the rotated image** in PGM format
+6. **Automatically converts** output to PNG for easy viewing
 
-```data/```
-This folder should hold all example data in any format. If the original data is rather large or can be brought in via scripts, this can be left blank in the respository, so that it doesn't require major downloads when all that is desired is the code/structure.
+The rotation uses nearest-neighbor interpolation and calculates the appropriate bounding box to contain the entire rotated image.
 
-```lib/```
-Any libraries that are not installed via the Operating System-specific package manager should be placed here, so that it is easier for inclusion/linking.
+## Project Structure
 
-```src/```
-The source code should be placed here in a hierarchical fashion, as appropriate.
-
-```README.md```
-This file should hold the description of the project so that anyone cloning or deciding if they want to clone this repository can understand its purpose to help with their decision.
-
-```INSTALL```
-This file should hold the human-readable set of instructions for installing the code so that it can be executed. If possible it should be organized around different operating systems, so that it can be done by as many people as possible with different constraints.
-
-```Makefile or CMAkeLists.txt or build.sh```
-There should be some rudimentary scripts for building your project's code in an automatic fashion.
-
-```run.sh```
-An optional script used to run your executable code, either with or without command-line arguments.
-
-## Key Concepts
-
-Performance Strategies, Image Processing, NPP Library
-
-## Supported SM Architectures
-
-[SM 3.5 ](https://developer.nvidia.com/cuda-gpus)  [SM 3.7 ](https://developer.nvidia.com/cuda-gpus)  [SM 5.0 ](https://developer.nvidia.com/cuda-gpus)  [SM 5.2 ](https://developer.nvidia.com/cuda-gpus)  [SM 6.0 ](https://developer.nvidia.com/cuda-gpus)  [SM 6.1 ](https://developer.nvidia.com/cuda-gpus)  [SM 7.0 ](https://developer.nvidia.com/cuda-gpus)  [SM 7.2 ](https://developer.nvidia.com/cuda-gpus)  [SM 7.5 ](https://developer.nvidia.com/cuda-gpus)  [SM 8.0 ](https://developer.nvidia.com/cuda-gpus)  [SM 8.6 ](https://developer.nvidia.com/cuda-gpus)
-
-## Supported OSes
-
-Linux, Windows
-
-## Supported CPU Architecture
-
-x86_64, ppc64le, armv7l
-
-## CUDA APIs involved
-
-## Dependencies needed to build/run
-[FreeImage](../../README.md#freeimage), [NPP](../../README.md#npp)
-
-## Prerequisites
-
-Download and install the [CUDA Toolkit 11.4](https://developer.nvidia.com/cuda-downloads) for your corresponding platform.
-Make sure the dependencies mentioned in [Dependencies]() section above are installed.
-
-## Build and Run
-
-### Windows
-The Windows samples are built using the Visual Studio IDE. Solution files (.sln) are provided for each supported version of Visual Studio, using the format:
 ```
-*_vs<version>.sln - for Visual Studio <version>
-```
-Each individual sample has its own set of solution files in its directory:
-
-To build/examine all the samples at once, the complete solution files should be used. To build/examine a single sample, the individual sample solution files should be used.
-> **Note:** Some samples require that the Microsoft DirectX SDK (June 2010 or newer) be installed and that the VC++ directory paths are properly set up (**Tools > Options...**). Check DirectX Dependencies section for details."
-
-### Linux
-The Linux samples are built using makefiles. To use the makefiles, change the current directory to the sample directory you wish to build, and run make:
-```
-$ cd <sample_dir>
-$ make
-```
-The samples makefiles can take advantage of certain options:
-*  **TARGET_ARCH=<arch>** - cross-compile targeting a specific architecture. Allowed architectures are x86_64, ppc64le, armv7l.
-    By default, TARGET_ARCH is set to HOST_ARCH. On a x86_64 machine, not setting TARGET_ARCH is the equivalent of setting TARGET_ARCH=x86_64.<br/>
-`$ make TARGET_ARCH=x86_64` <br/> `$ make TARGET_ARCH=ppc64le` <br/> `$ make TARGET_ARCH=armv7l` <br/>
-    See [here](http://docs.nvidia.com/cuda/cuda-samples/index.html#cross-samples) for more details.
-*   **dbg=1** - build with debug symbols
-    ```
-    $ make dbg=1
-    ```
-*   **SMS="A B ..."** - override the SM architectures for which the sample will be built, where `"A B ..."` is a space-delimited list of SM architectures. For example, to generate SASS for SM 50 and SM 60, use `SMS="50 60"`.
-    ```
-    $ make SMS="50 60"
-    ```
-
-*  **HOST_COMPILER=<host_compiler>** - override the default g++ host compiler. See the [Linux Installation Guide](http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#system-requirements) for a list of supported host compilers.
-```
-    $ make HOST_COMPILER=g++
+├── bin/                    # Compiled executables
+│   ├── imageRotationNPP.exe           # Simple test version
+│   └── imageRotationNPP_real.exe      # Full version with image loading
+├── data/                   # Input and output images
+│   ├── Lena.png           # Original color test image
+│   ├── Lena_gray.pgm      # Grayscale version for processing
+│   ├── Lena_rotated.pgm   # Output: rotated image (PGM format)
+│   └── Lena_rotated.png   # Output: rotated image (PNG format)
+├── src/                    # Source code
+│   ├── imageRotationNPP.cpp           # Original NVIDIA template
+│   ├── imageRotationNPP_simple.cpp    # Simplified test version
+│   └── imageRotationNPP_real.cpp      # Working image loader version
+├── common/include/         # NPP wrapper headers
+├── Build.ps1              # Windows build script
+├── Run.ps1               # Windows run script
+├── ConvertToPNG.ps1      # PGM to PNG converter
+└── Verify-VSSetup.ps1    # Visual Studio verification
 ```
 
+## Key Learning Concepts
 
-## Running the Program
-After building the project, you can run the program using the following command:
+- **GPU Memory Management**: Host-to-device and device-to-host data transfers
+- **NPP Library Usage**: Leveraging NVIDIA's optimized image processing primitives  
+- **CUDA Integration**: Combining CUDA runtime with specialized libraries
+- **Image Processing**: Geometric transformations and coordinate mapping
+- **Performance Optimization**: GPU acceleration vs CPU processing
 
-```bash
-Copy code
-make run
+## CUDA APIs Used
+
+- **Runtime API**: Device discovery, memory management, error handling
+- **NPP Library**: `nppiRotate_8u_C1R` for optimized image rotation
+- **Helper Functions**: CUDA device detection and NPP error checking
+
+## Supported Hardware
+
+- **GPU**: NVIDIA GPUs with compute capability 3.5 or higher
+- **Architectures**: SM 3.5, 3.7, 5.0, 5.2, 6.0, 6.1, 7.0, 7.2, 7.5, 8.0, 8.6+
+- **Operating Systems**: Windows 10/11, Linux x86_64
+
+## Quick Start Guide
+
+### Step 1: Check Prerequisites
+1. **Verify you have an NVIDIA GPU**
+   ```powershell
+   nvidia-smi
+   ```
+   Should show your GPU information
+
+2. **Check CUDA installation**
+   ```powershell
+   nvcc --version
+   ```
+   Should show CUDA compiler version
+
+### Step 2: Download and Setup
+1. **Clone or download this project**
+2. **Navigate to project directory**
+   ```powershell
+   cd CUDAatScaleForTheEnterpriseCourseProjectTemplate
+   ```
+
+### Step 3: Install Dependencies (First-time setup)
+1. **Install Visual Studio Community 2022**
+   ```powershell
+   winget install Microsoft.VisualStudio.2022.Community
+   ```
+   
+2. **In Visual Studio Installer, add C++ workload:**
+   - Open Visual Studio Installer
+   - Click "Modify" next to Visual Studio Community 2022
+   - Check "Desktop development with C++"
+   - Click "Modify" to install
+
+3. **Install ImageMagick (for PNG conversion)**
+   ```powershell
+   winget install ImageMagick.ImageMagick
+   ```
+
+### Step 4: Verify Installation
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Verify-VSSetup.ps1
+```
+Should show: "Visual Studio C++ workload is properly installed!"
+
+### Step 5: Prepare Input Image
+```powershell
+# Convert the provided Lena.png to grayscale PGM format
+& "C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe" "data\Lena.png" -colorspace Gray "data\Lena_gray.pgm"
 ```
 
-This command will execute the compiled binary, rotating the input image (Lena.png) by 45 degrees, and save the result as Lena_rotated.png in the data/ directory.
+### Step 6: Build the Project
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Build.ps1
+```
+Should show: "Build successful! Executable created: bin\imageRotationNPP.exe"
 
-If you wish to run the binary directly with custom input/output files, you can use:
-
-```bash
-- Copy code
-./bin/imageRotationNPP --input data/Lena.png --output data/Lena_rotated.png
+### Step 7: Run Image Rotation
+```powershell
+.\bin\imageRotationNPP_real.exe
 ```
 
-- Cleaning Up
-To clean up the compiled binaries and other generated files, run:
+### Step 8: View Results
+- **PGM format**: `data\Lena_rotated.pgm`
+- **PNG format**: `data\Lena_rotated.png` (automatically created)
+
+You can open the PNG file with any image viewer to see the 45-degree rotated Lena image.
+
+## System Requirements
+
+### Hardware
+- NVIDIA GPU with compute capability 3.5 or higher
+- Compatible NVIDIA drivers
+
+### Software
+- Windows 10/11 or Linux
+- CUDA Toolkit 11.4 or newer (includes NPP library)
+- Visual Studio 2022 with C++ workload (Windows)
+- GCC compiler (Linux)
+
+### Windows Setup Instructions
+
+1. **Install CUDA Toolkit**
+   - Download from NVIDIA Developer website
+   - Ensure NPP components are included
+
+2. **Install Visual Studio Community 2022**
+   ```powershell
+   winget install Microsoft.VisualStudio.2022.Community
+   ```
+   - Select "Desktop development with C++" workload during installation
+
+3. **Verify Installation**
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\Verify-VSSetup.ps1
+   ```
 
 
-```bash
-- Copy code
-make clean
+## Building and Running (Windows)
+
+### Build the Project
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Build.ps1
 ```
 
-This will remove all files in the bin/ directory.
+### Run the Program
+```powershell
+.\bin\imageRotationNPP_real.exe
+```
 
-## PROOF:
+### Alternative: Use Run Script
+```powershell
+powershell -ExecutionPolicy Bypass -File .\Run.ps1
+```
 
- ## TITLE: CUDA at Scale: Image Batch Processor using OpenCV
-## Overview
+## Input and Output
 
-This project demonstrates large-scale image processing using GPU-style operations.
-It simulates CUDA-based parallelism by processing multiple images (100s of small or 10s of large ones) with pixel-wise operations such as Grayscale conversion and Gaussian blur using the OpenCV library in Python.
+**Input**: The program loads `data/Lena_gray.pgm` (grayscale version of the famous Lena test image)
+- Original dimensions: 1666x1250 pixels
+- Format: PGM (Portable Graymap)
 
-Although implemented in Python, the project structure and workflow mimic a CUDA-style processing pipeline — preparing the foundation for extending to real GPU-based CUDA kernels.
+**Output**: Two files are generated:
+- `data/Lena_rotated.pgm` - Raw PGM format
+- `data/Lena_rotated.png` - PNG format for easy viewing
+- Rotated dimensions: 2499x1875 pixels (larger to contain the rotated image)
 
-## Objective:
-To perform high-speed, parallel-style processing on multiple image datasets to simulate how CUDA-based systems scale image transformations.
+## Technical Details
 
-## Key Concepts:
+- **Rotation Angle**: Fixed at 45 degrees
+- **Interpolation**: Nearest-neighbor (NPPI_INTER_NN)
+- **Memory Management**: Automatic GPU memory allocation via NPP wrappers
+- **Image Format**: 8-bit grayscale (single channel)
+- **GPU Function Used**: `nppiRotate_8u_C1R`
 
-Batch Image Processing
+## Example Output
 
-GPU Parallelism Simulation
+```
+D:\GPU_Trainee\CUDAatScaleForTheEnterpriseCourseProjectTemplate\bin\imageRotationNPP_real.exe Starting...
 
-Gaussian Filtering and Grayscale Conversion
+GPU Device 0: "Pascal" with compute capability 6.1
 
-OpenCV-based Image Transformation
+NPP Library Version 12.4.1
+  CUDA Driver  Version: 12.9
+  CUDA Runtime Version: 12.9
+  Device 0: <          Pascal >, Compute SM 6.1 detected
+Loading actual Lena image from: data\Lena_gray.pgm
+Loading image: 1666x1250 (max: 255)
+Rotating image by 45 degrees...
+Original size: 1666x1250
+Rotated size: 2499x1875
+Saved rotated image: data\Lena_rotated.pgm
+Creating PNG version...
+SUCCESS: Actual input image rotated 45 degrees!
+Output files:
+   - data\Lena_rotated.pgm (PGM format)
+   - data\Lena_rotated.png (PNG format)
+```
 
-## Proof of Execution and Automation
-[CUDA.pdf](https://github.com/user-attachments/files/23190812/CUDA.pdf)
-<img width="1911" height="1079" alt="Screenshot 2025-10-28 203058" src="https://github.com/user-attachments/assets/ae32408a-d5c2-4a4a-9d45-f86092fa24e0" />
+## Troubleshooting
 
-[CUDA 1.pdf](https://github.com/user-attachments/files/23190900/CUDA.1.pdf)
+**Build fails with "cl.exe not found"**
+- Run `.\Verify-VSSetup.ps1` to check Visual Studio installation
+- Ensure "Desktop development with C++" workload is installed
+
+**CUDA not found**
+- Verify CUDA Toolkit installation
+- Check `$env:CUDA_PATH` environment variable
+
+**No GPU detected**
+- Ensure NVIDIA drivers are installed
+- Check GPU compute capability (must be 3.5+)
+
+## Usage Scenarios
+
+### Scenario 1: First Time User (Complete Setup)
+```powershell
+# 1. Check if you have NVIDIA GPU
+nvidia-smi
+
+# 2. Install dependencies
+winget install Microsoft.VisualStudio.2022.Community
+winget install ImageMagick.ImageMagick
+
+# 3. Setup C++ workload in Visual Studio Installer
+# 4. Verify setup
+powershell -ExecutionPolicy Bypass -File .\Verify-VSSetup.ps1
+
+# 5. Prepare input image
+& "C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe" "data\Lena.png" -colorspace Gray "data\Lena_gray.pgm"
+
+# 6. Build and run
+powershell -ExecutionPolicy Bypass -File .\Build.ps1
+.\bin\imageRotationNPP_real.exe
+```
+
+### Scenario 2: Quick Run (Dependencies Already Installed)
+```powershell
+# Just build and run
+powershell -ExecutionPolicy Bypass -File .\Build.ps1
+.\bin\imageRotationNPP_real.exe
+```
+
+### Scenario 3: Using Your Own Image
+```powershell
+# 1. Convert your image to grayscale PGM
+& "C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\magick.exe" "path\to\your\image.jpg" -colorspace Gray "data\Lena_gray.pgm"
+
+# 2. Run the rotation
+.\bin\imageRotationNPP_real.exe
+
+# Your rotated image will be in data\Lena_rotated.png
+```
+
+### Scenario 4: Development/Testing
+```powershell
+# Clean previous builds
+Remove-Item bin\*.exe -Force
+
+# Build with specific compiler flags
+powershell -ExecutionPolicy Bypass -File .\Build.ps1
+
+# Run and check output
+.\bin\imageRotationNPP_real.exe
+dir data\*rotated*
+```
+
+## Alternative: Simple Test Version
+If you want to see GPU rotation without image loading:
+```powershell
+.\bin\imageRotationNPP.exe
+```
+This creates a test checkerboard pattern and rotates it.
+
+## What You Should See
+
+1. **During execution**: GPU information, image dimensions, processing messages
+2. **Output files**: 
+   - `data\Lena_rotated.pgm` (raw format, ~2.3MB)
+   - `data\Lena_rotated.png` (viewable format, ~1.8MB)
+3. **Visual result**: The famous Lena image rotated 45 degrees clockwise
+4. **Size change**: Original 1666×1250 becomes 2499×1875 (larger to fit rotation)
+
+## Understanding the Output
+
+### Performance Information
+The program displays detailed information about your system:
+```
+GPU Device 0: "Pascal" with compute capability 6.1
+NPP Library Version 12.4.1
+CUDA Driver Version: 12.9
+CUDA Runtime Version: 12.9
+```
+
+### Image Processing Details
+```
+Loading image: 1666x1250 (max: 255)
+Rotating image by 45 degrees...
+Original size: 1666x1250
+Rotated size: 2499x1875
+```
+
+### File Outputs Explained
+- **Original**: `data\Lena.png` (4.5MB color image)
+- **Intermediate**: `data\Lena_gray.pgm` (2.1MB grayscale for processing)
+- **Result PGM**: `data\Lena_rotated.pgm` (4.7MB raw rotated data)
+- **Result PNG**: `data\Lena_rotated.png` (1.8MB compressed viewable image)
+
+## Next Steps and Learning
+
+### Experiment with the Code
+1. **Change rotation angle**: Modify the `angle` variable in `imageRotationNPP_real.cpp`
+2. **Try different interpolation**: Change `NPPI_INTER_NN` to `NPPI_INTER_LINEAR`
+3. **Process your own images**: Replace Lena with your own grayscale images
+
+### Understanding GPU Acceleration
+- **CPU vs GPU**: Try processing large images to see performance difference
+- **Memory transfers**: Notice the host-to-device and device-to-host operations
+- **Parallel processing**: Each pixel rotation is computed in parallel on GPU cores
+
+### Extend the Project
+- Add support for color images using `nppiRotate_8u_C3R`
+- Implement different rotation angles as command-line parameters
+- Add batch processing for multiple images
+- Measure and compare processing times
+
+## Common Questions
+
+**Q: Why convert to grayscale?**
+A: This educational template focuses on the rotation algorithm, not color processing. NPP supports color rotation with `nppiRotate_8u_C3R`.
+
+**Q: Can I rotate by other angles?**
+A: Yes, modify the `angle` variable. The bounding box calculation may need adjustment for optimal results.
+
+**Q: Why is the output larger?**
+A: When rotating a rectangle, the diagonal becomes longer. The output size ensures no image data is lost.
