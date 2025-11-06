@@ -79,4 +79,5 @@ NPP Library Version 12.3.1
 npp-filters opened: <./data/Lena.png> successfully!
 Saved image: ./data/Lena_filter_sobel_v_none.png
 ```
-![image](./Sample-output/Lena_filter_sobel_v_none.png)
+<img width="1666" height="1250" alt="image" src="https://github.com/user-attachments/assets/b7aa0b9d-dcd1-4e0d-abfc-c1ce13b84c59" />
+
